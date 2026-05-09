@@ -1,0 +1,70 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
+/**
+ * Catch-all API proxy route for sessions-service.
+ *
+ * All requests to /api/sessions/* are forwarded to the sessions-service
+ * backend. This keeps the sessions-service internal (no public domain)
+ * while allowing the client to reach it through the Next.js server.
+ *
+ * The proxy also forwards the client's IP address via x-forwarded-for
+ * so the sessions-service can perform accurate IP geolocation.
+ */
+
+const SESSIONS_SERVICE_URL =
+  process.env.SESSIONS_SERVICE_URL || "http://192.168.86.2:5580";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  try {
+    const { path } = req.query;
+    const segments = Array.isArray(path) ? path.join("/") : path || "";
+    const queryString = new URLSearchParams(
+      req.query as Record<string, string>,
+    );
+    // Remove the path param used by Next.js routing
+    queryString.delete("path");
+    const qs = queryString.toString();
+    const url = `${SESSIONS_SERVICE_URL}/${segments}${qs ? `?${qs}` : ""}`;
+
+    // Forward the client's real IP
+    const clientIp =
+      (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
+      req.socket?.remoteAddress ||
+      "";
+
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (clientIp) {
+      headers["x-forwarded-for"] = clientIp;
+    }
+
+    // Forward session ID header if present
+    const sessionId = req.headers["x-session-id"] as string;
+    if (sessionId) {
+      headers["x-session-id"] = sessionId;
+    }
+
+    const fetchOptions: RequestInit = {
+      method: req.method || "GET",
+      headers,
+    };
+
+    if (req.method !== "GET" && req.method !== "HEAD" && req.body) {
+      fetchOptions.body = JSON.stringify(req.body);
+    }
+
+    const response = await fetch(url, fetchOptions);
+    const data = await response.json();
+
+    res.status(response.status).json(data);
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Proxy error";
+    res.status(502).json({ error: true, message });
+  }
+}

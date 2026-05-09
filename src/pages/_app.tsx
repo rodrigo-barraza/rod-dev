@@ -26,25 +26,31 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
             setIsRenderApiAvailable(false);
         }
       }
-    
-    function postSession() {
-        EventLibrary.postSession(1, screen.width, screen.height);
-    }
 
     useEffect(() => {
-        const sessionId = sessionStorage.id;
-        if (sessionId) {
-            EventLibrary.postEventSessionReturning(document.referrer, window.location.href);
-        } else {
+        // Initialize session tracking
+        const { isNew } = EventLibrary.init();
+
+        // Record session type (new vs returning)
+        if (isNew) {
             EventLibrary.postEventSessionNew(document.referrer, window.location.href);
+        } else {
+            EventLibrary.postEventSessionReturning(document.referrer, window.location.href);
         }
+
+        // Record initial page view
+        EventLibrary.postPageView(
+            window.location.href,
+            document.title,
+            document.referrer || null,
+        );
 
         getStatus();
 
+        // Track navigation and link clicks
         document.addEventListener('click', (event: MouseEvent) => {
             event = event || window.event;
             const target = event.target as any;
-            // const text = target.textContent || target.innerText;
             if (target && target.nodeName === 'A') {
                 if(target.href.includes('//development.rod.dev') ||
                 target.href.includes('//rod.dev') ||
@@ -56,7 +62,12 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
             }
         }, false);
 
-        setInterval(postSession, 1000);
+        // Session heartbeat — every 5 seconds
+        const heartbeatInterval = setInterval(() => {
+            EventLibrary.postSession(5000, screen.width, screen.height);
+        }, 5000);
+
+        return () => clearInterval(heartbeatInterval);
     }, [])
 
     return (
