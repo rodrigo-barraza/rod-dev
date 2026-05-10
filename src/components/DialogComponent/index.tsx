@@ -10,18 +10,7 @@ export default function DialogComponent(props: any) {
         combinedClassNames = className.split(' ').map((name) => style[name]).join(' ');
     }
 
-    // useEffect(() => {
-    //     if (show) {
-    //         dialogReference.current.showModal()
-    //     } else {
-    //         dialogReference.current.close()
-    //     }
-    // }, [show])
-
     return (
-        // <dialog id="DialogComponent" ref={dialogReference} className={`${style.DialogComponent} ${combinedClassNames}`}>
-        //     {children}
-        // </dialog>
         <>
             {show && (
                 <div className={`${style.DialogComponent} ${combinedClassNames}`}>
