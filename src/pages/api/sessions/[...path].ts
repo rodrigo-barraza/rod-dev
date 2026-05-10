@@ -41,12 +41,25 @@ export default async function handler(
 
     if (clientIp) {
       headers["x-forwarded-for"] = clientIp;
+      headers["x-real-ip"] = clientIp;
+    }
+
+    // Forward user-agent so sessions-service can parse browser/OS/device
+    const userAgent = req.headers["user-agent"] as string;
+    if (userAgent) {
+      headers["user-agent"] = userAgent;
     }
 
     // Forward session ID header if present
     const sessionId = req.headers["x-session-id"] as string;
     if (sessionId) {
       headers["x-session-id"] = sessionId;
+    }
+
+    // Forward accept-language for locale detection
+    const acceptLanguage = req.headers["accept-language"] as string;
+    if (acceptLanguage) {
+      headers["accept-language"] = acceptLanguage;
     }
 
     const fetchOptions: RequestInit = {
