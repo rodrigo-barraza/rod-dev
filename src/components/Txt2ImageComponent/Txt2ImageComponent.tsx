@@ -77,7 +77,7 @@ export default function Txt2ImageComponent({render, setGuest}) {
             img.src = parsedResult.data.image
 
         })
-        .catch(error => console.log('error', error));
+        .catch(error => console.error('error', error));
     },[newStyle, newPrompt, sampler, cfg, aspectRatio])
 
     useEffect(() => {

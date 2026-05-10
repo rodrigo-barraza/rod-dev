@@ -12,7 +12,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
  */
 
 const SESSIONS_SERVICE_URL =
-  process.env.SESSIONS_SERVICE_URL || "http://192.168.86.2:5580";
+  process.env.SESSIONS_SERVICE_PUBLIC_URL ||
+  process.env.SESSIONS_SERVICE_URL ||
+  "http://localhost:5580";
 
 export default async function handler(
   req: NextApiRequest,
