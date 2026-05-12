@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { debounce } from 'lodash';
+import { debounce } from "@rodrigo-barraza/utilities-library/rate";
 
 interface UseFilteredPaginationOptions {
     postsPerPage?: number;
