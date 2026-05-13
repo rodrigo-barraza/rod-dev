@@ -8,6 +8,7 @@ import '@/styles/styles.scss'
 import '@/styles/animations.scss'
 import { AlertProvider, useAlertContext } from '@/contexts/AlertContext'
 import RenderApiLibrary from '@/libraries/RenderApiLibrary';
+import { ThemeProvider } from "@rodrigo-barraza/components-library";
 import { useApplicationState } from "@/stores/ZustandStore";
 
 
@@ -71,13 +72,15 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
     }, [])
 
     return (
-        <Layout>
-            <AlertProvider>
-                {message}
-                <Component {...pageProps} />
-            </AlertProvider>
-            {/* <Analytics /> */}
-        </Layout>
+        <ThemeProvider>
+            <Layout>
+                <AlertProvider>
+                    {message}
+                    <Component {...pageProps} />
+                </AlertProvider>
+                {/* <Analytics /> */}
+            </Layout>
+        </ThemeProvider>
     )
 }
 export default App

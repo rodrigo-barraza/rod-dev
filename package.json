@@ -19,15 +19,16 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
+    "@rodrigo-barraza/components-library": "github:rodrigo-barraza/components-library",
+    "@rodrigo-barraza/utilities-library": "git+https://github.com/rodrigo-barraza/utilities-library.git",
     "@vercel/analytics": "^2.0.1",
     "lodash": "^4.18.1",
+    "lucide-react": "^1.14.0",
     "mitt": "^3.0.1",
     "next": "16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "zustand": "^5.0.13",
-    "lucide-react": "^1.14.0",
-    "@rodrigo-barraza/utilities-library": "git+https://github.com/rodrigo-barraza/utilities-library.git"
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
