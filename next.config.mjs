@@ -22,7 +22,7 @@ Object.assign(process.env, secrets);
 const nextConfig = {
   output: "standalone",
   turbopack: {},
-  transpilePackages: ["@rodrigo-barraza/utilities-library"],
+  transpilePackages: ["@rodrigo-barraza/utilities-library", "@rodrigo-barraza/components-library"],
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if
