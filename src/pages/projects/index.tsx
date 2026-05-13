@@ -1,6 +1,6 @@
 import styles from './index.module.scss'
 import ProjectsCollection from '@/collections/ProjectsCollection'
-import SeoHead from '@/components/SeoHead/SeoHead'
+import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 
 export const getServerSideProps = async (context: any) =>
@@ -50,7 +50,7 @@ export default function Projects(props) {
 
     return (
         <main className={styles.AboutView}>
-            <SeoHead meta={meta} />
+            <SeoHeadComponent meta={meta} />
             <div className="container">
             <div className="layout">
                 <div className="main">

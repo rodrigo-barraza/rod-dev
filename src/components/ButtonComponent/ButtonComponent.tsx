@@ -1,6 +1,6 @@
 import React from 'react'
 import style from './ButtonComponent.module.scss'
-import ActiveLink from '@/components/ActiveLink'
+import ActiveLinkComponent from '@/components/ActiveLinkComponent'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import { useState, useEffect } from 'react'
 
@@ -35,11 +35,11 @@ export default function ButtonComponent(props: any) {
                 </a>
             )}
             { routeHref && !href && (
-                <ActiveLink activeClassName="active" href={routeHref}>
+                <ActiveLinkComponent activeClassName="active" href={routeHref}>
                     { logo && ( <img src={getLogo} className={style.logo} alt={icon}></img> )}
                     { icon && ( <span className={style.icon}>{icon}</span> )}
                     { label && ( <span className={style.label}>{label}</span> )}
-                </ActiveLink>
+                </ActiveLinkComponent>
             )}
         </div>
     )

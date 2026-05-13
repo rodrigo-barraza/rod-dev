@@ -6,7 +6,7 @@ import styles from './index.module.scss'
 import ArtCollectionsCollection from '@/collections/ArtCollectionsCollection'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import RenderApiLibrary from '@/libraries/RenderApiLibrary'
-import SeoHead from '@/components/SeoHead/SeoHead'
+import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 
 export const getServerSideProps = async (context: any) =>
     UtilityLibrary.buildServerSideMetaProps(context, {
@@ -73,7 +73,7 @@ export default function Index(props) {
 
     return (
     <main className={styles.home}>
-        <SeoHead meta={meta} />
+        <SeoHeadComponent meta={meta} />
         <div className="container" itemProp="creator" itemScope itemType="http://schema.org/Person">
             <h1>
                 <span className="full-name"><span itemProp="givenName">Rodrigo</span> <span itemProp="familyName">Barraza</span></span>: <span itemProp="jobTitle">photographer</span>, <span itemProp="jobTitle">software engineer</span>, <span itemProp="jobTitle">artist</span>.

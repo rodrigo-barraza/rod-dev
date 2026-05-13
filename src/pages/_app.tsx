@@ -2,7 +2,7 @@ import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Analytics } from '@vercel/analytics/react';
 import { useEffect, useState } from 'react'
-import Layout from '@/components/Layout';
+import LayoutComponent from '@/components/LayoutComponent';
 import EventLibrary from '@/libraries/EventLibrary';
 import '@/styles/styles.scss'
 import '@/styles/animations.scss'
@@ -73,13 +73,13 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
 
     return (
         <ThemeProvider>
-            <Layout>
+            <LayoutComponent>
                 <AlertProvider>
                     {message}
                     <Component {...pageProps} />
                 </AlertProvider>
                 {/* <Analytics /> */}
-            </Layout>
+            </LayoutComponent>
         </ThemeProvider>
     )
 }

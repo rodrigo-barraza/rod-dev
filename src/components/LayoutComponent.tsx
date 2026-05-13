@@ -1,8 +1,8 @@
 import FooterComponent from '@/components//FooterComponent/FooterComponent'
 import HeaderComponent from '@/components/HeaderComponent/HeaderComponent'
-import './Layout.module.scss'
+import './LayoutComponent.module.scss'
 
-function Layout({ children }: { children: React.ReactNode }) {
+function LayoutComponent({ children }: { children: React.ReactNode }) {
     return (
         <>
         <HeaderComponent/>
@@ -12,4 +12,4 @@ function Layout({ children }: { children: React.ReactNode }) {
     )
 }
 
-export default Layout
+export default LayoutComponent

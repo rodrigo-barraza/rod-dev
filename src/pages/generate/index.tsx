@@ -8,7 +8,7 @@ import GuestApiLibrary from '@/libraries/GuestApiLibrary'
 import GenerateHeaderComponent from '@/components/GenerateHeaderComponent/GenerateHeaderComponent'
 import GalleryComponent from '@/components/GalleryComponent/GalleryComponent'
 import PaginationComponent from '@/components/PaginationComponent/PaginationComponent'
-import SeoHead from '@/components/SeoHead/SeoHead'
+import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import useGuest from '@/hooks/useGuest'
 
@@ -100,7 +100,7 @@ export default function Playground(props) {
 
   return (
     <main className={style.GeneratePage}>
-        <SeoHead meta={meta} />
+        <SeoHeadComponent meta={meta} />
         
         <GenerateHeaderComponent guest={guestData} renders={renders} />
         <Txt2ImageComponent render={render} setGuest={setGuestData}/>

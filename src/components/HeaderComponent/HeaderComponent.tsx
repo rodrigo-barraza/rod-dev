@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import ActiveLink from '@/components/ActiveLink'
+import ActiveLinkComponent from '@/components/ActiveLinkComponent'
 import styles from './HeaderComponent.module.scss'
 import SocialsCollection from '@/collections/SocialsCollection'
 import PagesCollection from '@/collections/PagesCollection'
@@ -75,11 +75,11 @@ const HeaderComponent: React.FC = () => {
                         <ul>
                             { PagesCollection.map((page, pageIndex) => (
                                 <li key={pageIndex}>
-                                    <ActiveLink activeClassName="active" href={page.path}>
+                                    <ActiveLinkComponent activeClassName="active" href={page.path}>
                                         {page.icon && <span className={styles.icon}>{page.icon}</span>}
                                         {/* {page.emoji && <span className="emoji">{page.emoji}</span>} */}
                                         <span className={styles.label}>{UtilityLibrary.capitalize(page.name)}</span>
-                                    </ActiveLink>
+                                    </ActiveLinkComponent>
                                 </li>
                             ))}
                         </ul>
@@ -101,7 +101,7 @@ const HeaderComponent: React.FC = () => {
                     <nav className="shrink">
                         <ul>
                             { PagesCollection.map((page, pageIndex) => (
-                                <li key={pageIndex}><ActiveLink activeClassName="active" href={page.path} onClick={() => setMobileMenu(false)} >{UtilityLibrary.capitalize(page.name)}</ActiveLink></li>
+                                <li key={pageIndex}><ActiveLinkComponent activeClassName="active" href={page.path} onClick={() => setMobileMenu(false)} >{UtilityLibrary.capitalize(page.name)}</ActiveLinkComponent></li>
                             ))}
                         </ul>
                     </nav>

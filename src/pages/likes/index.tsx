@@ -8,7 +8,7 @@ import GenerateHeaderComponent from '@/components/GenerateHeaderComponent/Genera
 import PaginationComponent from '@/components/PaginationComponent/PaginationComponent'
 import GalleryComponent from '@/components/GalleryComponent/GalleryComponent'
 import FilterComponent from '@/components/FilterComponent/FilterComponent'
-import SeoHead from '@/components/SeoHead/SeoHead'
+import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import GuestApiLibrary from '@/libraries/GuestApiLibrary'
 import useFilteredPagination from '@/hooks/useFilteredPagination'
@@ -72,7 +72,7 @@ export default function Renders(props) {
 
   return (
     <main className={style.RendersPage}>
-      <SeoHead meta={meta} />
+      <SeoHeadComponent meta={meta} />
       
       <GenerateHeaderComponent guest={guestData} renders={currentRenders} />
         <div className="gallery">

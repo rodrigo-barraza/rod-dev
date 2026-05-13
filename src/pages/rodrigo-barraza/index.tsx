@@ -4,7 +4,7 @@ import SocialsCollection from '@/collections/SocialsCollection'
 import AboutCollection from '@/collections/AboutCollection'
 import styles from './index.module.scss'
 import ButtonComponent from '@/components/ButtonComponent/ButtonComponent'
-import SeoHead from '@/components/SeoHead/SeoHead'
+import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 
 export const getServerSideProps = async (context: any) =>
@@ -118,7 +118,7 @@ export default function AboutView(props) {
 
     return (
         <main className={ styles.AboutView }>
-            <SeoHead meta={meta} />
+            <SeoHeadComponent meta={meta} />
             <div className="container">
                 <div className="layout">
                     <div className="sidebar">

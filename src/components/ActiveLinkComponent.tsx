@@ -7,7 +7,7 @@ type ActiveLinkProps = LinkProps & {
   activeClassName: string
 }
 
-const ActiveLink = ({children, activeClassName, className, ...props}: PropsWithChildren<ActiveLinkProps>) => {
+const ActiveLinkComponent = ({children, activeClassName, className, ...props}: PropsWithChildren<ActiveLinkProps>) => {
   const { asPath, isReady } = useRouter()
   const [computedClassName, setComputedClassName] = useState(className)
 
@@ -30,4 +30,4 @@ const ActiveLink = ({children, activeClassName, className, ...props}: PropsWithC
   )
 }
 
-export default ActiveLink
+export default ActiveLinkComponent

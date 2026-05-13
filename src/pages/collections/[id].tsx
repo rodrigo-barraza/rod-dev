@@ -5,7 +5,7 @@ import Link from 'next/link'
 import styles from './[id].module.scss'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import ArtCollectionsCollection from '@/collections/ArtCollectionsCollection'
-import SeoHead from '@/components/SeoHead/SeoHead'
+import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 
 export const getServerSideProps = async (context: any) => {
     const { query, resolvedUrl } = context
@@ -126,7 +126,7 @@ export default function Collection(props) {
 
     return (
         <main className={styles.CollectionView}>
-            <SeoHead meta={meta} />
+            <SeoHeadComponent meta={meta} />
             <div className="collection">
                 <div className="collection-details">
                     <div className="container">

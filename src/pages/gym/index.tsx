@@ -11,7 +11,7 @@ import ExerciseCollection from '@/collections/ExerciseCollection4'
 import DialogComponent from '@/components/DialogComponent'
 
 import ExerciseComponent from '@/components/ExerciseComponent/ExerciseComponent'
-import SeoHead from '@/components/SeoHead/SeoHead'
+import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
   const metaProps = UtilityLibrary.buildServerSideMetaProps(context, {
@@ -307,7 +307,7 @@ export default function Gym(props) {
 
     return (
     <main className={style.GymPage}>
-        <SeoHead meta={meta} />
+        <SeoHeadComponent meta={meta} />
         <div className="container">
             <div className="CardComponent">
                 <h1>Gym Tracker</h1>

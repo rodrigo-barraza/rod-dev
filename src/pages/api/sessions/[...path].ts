@@ -11,10 +11,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
  * so the sessions-service can perform accurate IP geolocation.
  */
 
-const SESSIONS_SERVICE_URL =
-  process.env.SESSIONS_SERVICE_PUBLIC_URL ||
-  process.env.SESSIONS_SERVICE_URL ||
-  "http://localhost:5580";
+import { SESSIONS_SERVICE_URL } from "@/config";
 
 export default async function handler(
   req: NextApiRequest,

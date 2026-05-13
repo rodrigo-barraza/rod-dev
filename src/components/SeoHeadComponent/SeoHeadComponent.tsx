@@ -16,7 +16,7 @@ interface SeoHeadProps {
     meta: SeoMeta;
 }
 
-export default function SeoHead({ meta }: SeoHeadProps) {
+export default function SeoHeadComponent({ meta }: SeoHeadProps) {
     return (
         <Head>
             <title>{meta.title}</title>
