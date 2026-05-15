@@ -36,11 +36,16 @@ const nextConfig = {
         protocol: "https",
         hostname: "assets.rod.dev",
       },
+      {
+        protocol: "https",
+        hostname: "api.prism.rod.dev",
+      },
     ],
   },
 
   env: {
     NEXT_PUBLIC_RODRIGO_SERVICE: secrets.NEXT_PUBLIC_RODRIGO_SERVICE,
+    NEXT_PUBLIC_PRISM_SERVICE: secrets.NEXT_PUBLIC_PRISM_SERVICE,
     ROD_DEV_MINIO_BUCKET_NAME: secrets.ROD_DEV_MINIO_BUCKET_NAME,
     ROD_DEV_ASSETS_MINIO_BUCKET_NAME: secrets.ROD_DEV_ASSETS_MINIO_BUCKET_NAME,
     RENDER_API: secrets.RENDER_API,

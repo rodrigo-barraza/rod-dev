@@ -1,5 +1,6 @@
 const ApiConstants = {
     RODRIGO_SERVICE: process.env.NEXT_PUBLIC_RODRIGO_SERVICE,
+    PRISM_SERVICE: process.env.NEXT_PUBLIC_PRISM_SERVICE,
     SESSION_SERVICE: 'session-service',
     SESSIONS_API: '/api/sessions',
     RENDER_SERVICE: 'render-service',

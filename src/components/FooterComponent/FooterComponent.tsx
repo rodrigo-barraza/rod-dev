@@ -4,8 +4,6 @@ import ArtCollectionsCollection from '@/collections/ArtCollectionsCollection'
 import SocialsCollection from '@/collections/SocialsCollection'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 
-
-// const FooterComponent: React.FC<{ userId: string }> = () => {
 const FooterComponent: React.FC = () => {
 
     return (

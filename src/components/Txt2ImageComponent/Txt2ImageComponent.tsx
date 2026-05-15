@@ -49,9 +49,7 @@ export default function Txt2ImageComponent({render, setGuest}) {
     const renderImage = useCallback(() => {
         setIsImageLoading(true)
         RenderApiLibrary.postRender(newPrompt, sampler, cfg, newStyle, '', aspectRatio)
-        .then(response => response.text())
-        .then(result => {
-            const parsedResult = JSON.parse(result)
+        .then(parsedResult => {
             const samplerLabel = UtilityLibrary.findSamplerLabel(parsedResult.data.sampler)
             const styleLabel = UtilityLibrary.findStyleLabel(parsedResult.data.style)
             const currentStyle = UtilityLibrary.findStyle(parsedResult.data.style)
@@ -79,6 +77,7 @@ export default function Txt2ImageComponent({render, setGuest}) {
         })
         .catch(error => console.error('error', error));
     },[newStyle, newPrompt, sampler, cfg, aspectRatio])
+
 
     useEffect(() => {
         async function getRender() {
