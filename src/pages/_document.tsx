@@ -1,26 +1,32 @@
 import { Html, Head, Main, NextScript } from 'next/document';
 import Script from 'next/script'
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
  
 export default function Document() {
     return (
         <Html lang="en">
         <Head>
-            <Script
-                id="google-tag-manager"
-                src="https://www.googletagmanager.com/gtag/js?id=G-R61CVJFDVF"
-                strategy="afterInteractive"
-            />
-            <Script 
-                id="google-tag-manager2"
-                strategy="afterInteractive">
-                {`
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
+            {GA_ID && (
+                <>
+                    <Script
+                        id="google-tag-manager"
+                        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+                        strategy="afterInteractive"
+                    />
+                    <Script 
+                        id="google-tag-manager2"
+                        strategy="afterInteractive">
+                        {`
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('js', new Date());
 
-                    gtag('config', 'G-R61CVJFDVF');
-                `}
-            </Script>
+                            gtag('config', '${GA_ID}');
+                        `}
+                    </Script>
+                </>
+            )}
             <Script 
                 id="google-analytics"
                 strategy="afterInteractive">
