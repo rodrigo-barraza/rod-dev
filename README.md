@@ -21,7 +21,7 @@ Portfolio site for [rod.dev](https://rod.dev) — AI art gallery, project showca
 ## Quick Start
 
 ```bash
-cp .env.example .env     # Set NEXT_PUBLIC_RODRIGO_SERVICE
+# Secrets are resolved from vault-service automatically.
 npm install
 npm run dev
 ```
