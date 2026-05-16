@@ -5,8 +5,12 @@ import StyleCollection from '@/collections/StyleCollection';
 import { Temporal as TemporalPolyfill } from '@js-temporal/polyfill';
 const Temporal: typeof TemporalPolyfill = (globalThis as any).Temporal ?? TemporalPolyfill;
 
-const ASSETS_BASE_URL = 'https://assets.rod.dev/rod-dev-assets';
-const GENERATIONS_BASE_URL = 'https://assets.rod.dev/rod-dev-generations';
+const ASSETS_PUBLIC_URL = process.env.NEXT_PUBLIC_ASSETS_PUBLIC_URL || 'https://assets.rod.dev';
+const ASSETS_BUCKET = process.env.NEXT_PUBLIC_ROD_DEV_ASSETS_MINIO_BUCKET_NAME || 'rod-dev-assets';
+const GENERATIONS_BUCKET = process.env.NEXT_PUBLIC_ROD_DEV_MINIO_BUCKET_NAME || 'rod-dev-generations';
+
+const ASSETS_BASE_URL = `${ASSETS_PUBLIC_URL}/${ASSETS_BUCKET}`;
+const GENERATIONS_BASE_URL = `${ASSETS_PUBLIC_URL}/${GENERATIONS_BUCKET}`;
 
 const UtilityLibrary = {
     // ─── Date Utilities (Temporal API) ──────────────────────────
