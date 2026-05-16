@@ -1,14 +1,12 @@
 import React from 'react'
 import style from './LikeComponent.module.scss'
-import { useState } from 'react'
 import LikeApiLibrary from '@/libraries/LikeApiLibrary'
 import FavoriteApiLibrary from '@/libraries/FavoriteApiLibrary'
 import GuestApiLibrary from '@/libraries/GuestApiLibrary'
+import type { LikeComponentProps } from '@/types/types'
 
 
-export default function LikeComponent(props: any) {
-    const {render, setFunction, setGuest, type}: {render: any, setFunction: any, setGuest: any, type: string} = props
-
+export default function LikeComponent({ render, setFunction, setGuest, type }: LikeComponentProps) {
     async function likeRender(id: string, like: boolean) {
         if (!like) {
             const postLike = await LikeApiLibrary.postLike(id)
@@ -31,13 +29,13 @@ export default function LikeComponent(props: any) {
 
     async function postFavorite(id: string, favorite: boolean) {
         if (!favorite) {
-            const postFavorite = await FavoriteApiLibrary.postFavorite(id)
-            if (postFavorite.data) {
+            const postFav = await FavoriteApiLibrary.postFavorite(id)
+            if (postFav.data) {
                 setFunction(id)
             }
         } else {
-            const deleteFavorite = await FavoriteApiLibrary.deleteFavorite(id)
-            if (deleteFavorite.data) {
+            const deleteFav = await FavoriteApiLibrary.deleteFavorite(id)
+            if (deleteFav.data) {
                 setFunction(id)
             }
         }
@@ -46,13 +44,13 @@ export default function LikeComponent(props: any) {
     return (
         <div className={`${style.LikeComponent}`}>
             { type === 'like' && (
-                <button className={`${style.like} ${render.like ? style.active : ''}`} onClick={()=>likeRender(render.id, render.like)}>
+                <button className={`${style.like} ${render.like ? style.active : ''}`} onClick={()=>likeRender(render.id, !!render.like)}>
                     <span className={style.icon}>Favorite</span>
                     <span className={style.amount}>{render.likes}</span>
                 </button>
             )}
             { type === 'favorite' && (
-                <button className={`${style.favorite} ${render.favorite ? style.active : ''}`} onClick={()=>postFavorite(render.id, render.favorite)}>
+                <button className={`${style.favorite} ${render.favorite ? style.active : ''}`} onClick={()=>postFavorite(render.id, !!render.favorite)}>
                     <span className={style.icon}>Bookmark</span>
                     <span className={style.amount}>{render.favorites}</span>
                 </button>

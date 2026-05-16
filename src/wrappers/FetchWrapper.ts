@@ -58,7 +58,7 @@ const FetchWrapper = {
     /**
      * POST request with optional JSON body and headers.
      */
-    async post(service: string, path: string, body?: Record<string, any>, headers?: Record<string, string>) {
+    async post(service: string, path: string, body?: Record<string, string>, headers?: Record<string, string>) {
         const url = this._buildUrl(service, path);
         const h = new Headers(headers || {});
         return this.fetch('POST', url, h, body || {}, new URLSearchParams({}));
@@ -67,7 +67,7 @@ const FetchWrapper = {
     /**
      * DELETE request with optional JSON body.
      */
-    async del(service: string, path: string, body?: Record<string, any>) {
+    async del(service: string, path: string, body?: Record<string, string>) {
         const url = this._buildUrl(service, path);
         return this.fetch('DELETE', url, new Headers({}), body || {}, new URLSearchParams({}));
     },

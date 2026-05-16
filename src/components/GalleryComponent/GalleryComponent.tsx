@@ -8,37 +8,37 @@ import RenderApiLibrary from '@/libraries/RenderApiLibrary';
 import UtilityLibrary from '@/libraries/UtilityLibrary';
 import LikeComponent from '../LikeComponent/LikeComponent';
 import { useAlertContext } from '@/contexts/AlertContext';
+import type { GalleryComponentProps, Render } from '@/types/types';
 
-export default function GalleryComponent(props) {
+export default function GalleryComponent({ renders, getRenders, getGuest, mode }: GalleryComponentProps) {
     const router = useRouter()
-    const { renders, getRenders, getGuest, mode } = props;
-    const [isDeleting, setIsDeleting] = useState({})
+    const [isDeleting, setIsDeleting] = useState<Record<string, boolean>>({})
     const { setMessage } = useAlertContext();
 
-    async function deleteRender(id) {
-      const deleteRender = await RenderApiLibrary.deleteRender(id);
-      if (deleteRender.data.success) {
-        getRenders();
+    async function deleteRender(id: string) {
+      const deleteResult = await RenderApiLibrary.deleteRender(id);
+      if (deleteResult.data?.success) {
+        getRenders?.();
       }
     }
   
-    async function startDeleteRender(id) {
+    async function startDeleteRender(id: string) {
       const deleteObject = { ...isDeleting };
       deleteObject[id] = true;
       setIsDeleting(deleteObject);
     }
   
-    async function cancelDeleteRender(id) {
+    async function cancelDeleteRender(id: string) {
       const deleteObject = { ...isDeleting };
       deleteObject[id] = false;
       setIsDeleting(deleteObject);
     }
 
-    function downloadGeneration(generation) {
+    function downloadGeneration(generation: Render) {
       UtilityLibrary.downloadImage(generation.image, generation.id);
     }
   
-    function shareGeneration(generation) {
+    function shareGeneration(generation: Render) {
         setMessage('Copied Link!')
         UtilityLibrary.shareLink(generation.id);
         
@@ -50,7 +50,7 @@ export default function GalleryComponent(props) {
 
     return (
         <div className={`${style.GalleryComponent} ${style[mode]}`}>
-            { renders?.map((render, index) => (
+            { renders?.map((render: Render, index: number) => (
                 <div key={index} className="item">
                     <div className="container">
                     <picture className="RenderPictureComponent image">
@@ -109,8 +109,8 @@ export default function GalleryComponent(props) {
                               )}
                           </div>
                           <div className="super-actions">
-                            <LikeComponent type="like" render={render} setFunction={getRenders}></LikeComponent>
-                            <LikeComponent type="favorite" render={render} setFunction={getRenders}></LikeComponent>
+                            <LikeComponent type="like" render={render} setFunction={() => getRenders?.()}></LikeComponent>
+                            <LikeComponent type="favorite" render={render} setFunction={() => getRenders?.()}></LikeComponent>
                           </div>
                           <div className="super-actions2">
                             <ButtonComponent 

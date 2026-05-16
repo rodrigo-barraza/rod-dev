@@ -1,8 +1,9 @@
 import React from 'react';
 import style from './PaginationComponent.module.scss';
+import type { PaginationComponentProps } from '@/types/types';
 
-const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage }) => {
-  const pageNumbers = [];
+const Pagination: React.FC<PaginationComponentProps> = ({ postsPerPage, totalPosts, paginate, currentPage }) => {
+  const pageNumbers: number[] = [];
 
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);

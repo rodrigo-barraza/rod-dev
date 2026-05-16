@@ -1,4 +1,6 @@
-const SocialsCollection = [
+import type { Social } from '@/types/types';
+
+const SocialsCollection: (Social & { username: string })[] = [
     {
         type: 'github',
         name: 'Github',

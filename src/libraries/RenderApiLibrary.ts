@@ -25,7 +25,7 @@ const RenderApiLibrary = {
         style: string,
         negativePrompt: string,
         aspectRatio?: string,
-    ): Promise<any> {
+    ): Promise<{ data: { id: string; image: string | null; prompt: string; style: string; sampler: string; cfg: number; count: number; createdAt: string; aspectRatio: string; provider?: string; model?: string; estimatedCost?: number } }> {
         const prismUrl = ApiConstants.PRISM_SERVICE;
         if (!prismUrl) {
             throw new Error('PRISM_SERVICE is not configured');
@@ -132,7 +132,7 @@ const RenderApiLibrary = {
     },
 
     async deleteRender(id?: string) {
-        const body: Record<string, any> = {};
+        const body: Record<string, string> = {};
         if (id) body.id = id;
         return FetchWrapper.del(S, 'render', body);
     },

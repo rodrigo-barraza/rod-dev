@@ -1,15 +1,14 @@
 import React from 'react'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import ExerciseCollection from '@/collections/ExerciseCollection4'
+import type { ExerciseComponentProps, GymSet } from '@/types/types'
 
-export default function ExerciseComponent(props: any) {
-    const { entry, ghost } = props
-
+export default function ExerciseComponent({ entry, ghost }: ExerciseComponentProps) {
     function figureExercisePart(exercise: string) {
         let part = ''
-        ExerciseCollection.forEach((entry: any) => {
-            if (entry.name === exercise) {
-            part = entry.type
+        ExerciseCollection.forEach((item) => {
+            if (item.name === exercise) {
+            part = item.type
             }
         })
         return part
@@ -40,7 +39,7 @@ export default function ExerciseComponent(props: any) {
                         </div>
                     </div>
                     <div className="body">
-                    {entry.sets?.map((set: any, index: any) => (
+                    {entry.sets?.map((set: GymSet, index: number) => (
                         <div key={index}>
                             <div>Set {index+1}</div>
                             <div>{UtilityLibrary.toTime(set.date)}</div>

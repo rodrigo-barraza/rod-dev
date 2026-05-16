@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { GetServerSideProps } from 'next'
+import type { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import GymApiLibrary from '@/libraries/GymApiLibrary'
@@ -12,27 +12,30 @@ import DialogComponent from '@/components/DialogComponent'
 
 import ExerciseComponent from '@/components/ExerciseComponent/ExerciseComponent'
 import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
+import type { Meta, Exercise, JournalEntry, JournalMap, GymSet } from '@/types/types'
 
-export const getServerSideProps: GetServerSideProps = async (context: any) => {
+interface GymPageProps {
+    meta: Meta;
+}
+
+export const getServerSideProps: GetServerSideProps<GymPageProps> = async (context: GetServerSidePropsContext) => {
   const metaProps = UtilityLibrary.buildServerSideMetaProps(context, {
       title: 'Gym Tracker',
       description: 'Gym exercise tracking and journal.',
       keywords: 'gym, exercise, tracking, journal',
   });
-  return { props: { ...metaProps.props, guest: {} } };
+  return { props: { ...metaProps.props } };
 }
 
 
-export default function Gym(props) {
+export default function Gym({ meta }: GymPageProps) {
     const router = useRouter()
-    const { meta, guest } = props
-    const [gymExercises, setGymExercises] = useState(ExerciseCollection)
-    const [isHidden, setIsHidden] = useState({})
-    const [trackList, setTrackList] = useState([])
+    const [gymExercises] = useState<Exercise[]>(ExerciseCollection)
+    const [trackList, setTrackList] = useState<Exercise[]>([])
     const [weight, setWeight] = useState('')
     const [reps, setReps] = useState('')
 
-    const [selectedExercise, setSelectedExercise] = useState('')
+    const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
     const [selectedType, setSelectedType] = useState('')
     const [selectedEquipment, setSelectedEquipment] = useState('')
     const [selectedPosition, setSelectedPosition] = useState('')
@@ -40,21 +43,21 @@ export default function Gym(props) {
     const [selectedStance, setSelectedStance] = useState('')
     const [selectedForm, setSelectedForm] = useState('')
 
-    const [originalJournal, setOriginalJournal] = useState([{}])
-    const [journal, setJournal] = useState([{}])
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [originalJournal, setOriginalJournal] = useState<GymSet[]>([])
+    const [journal, setJournal] = useState<JournalMap>({})
+    const [isModalOpen, setIsModalOpen] = useState<boolean | string>(false)
     const [exerciseStep, setExerciseStep] = useState('exercises')
     const [subtitle, setSubtitle] = useState('')
-    const [averageTotalVolume, setAverageTotalVolume] = useState(0)
+    const [averageTotalVolume, setAverageTotalVolume] = useState<number | string>(0)
 
-    const [today, setToday] = useState(UtilityLibrary.todayISOString())
+    const [today] = useState(UtilityLibrary.todayISOString())
 
     async function getJournal() {
-        const { data, error, response } = await GymApiLibrary.getJournal()
+        const { data } = await GymApiLibrary.getJournal()
         if (data) {
             setOriginalJournal(data)
-            const superExercises = {}
-            data.slice(0, 1000).forEach((set, key) => {
+            const superExercises: JournalMap = {}
+            data.slice(0, 1000).forEach((set: GymSet) => {
                 const differenceInDays = UtilityLibrary.daysSince(set.date)
                 const date = UtilityLibrary.toISODateString(set.date)
                 const exerciseKey = `${set.exercise}`
@@ -64,19 +67,19 @@ export default function Gym(props) {
                 } 
                 if (superExercises[date]) {
                     if (!superExercises[date][exerciseKey]) {
-                        superExercises[date][exerciseKey] = {}
-                        superExercises[date][exerciseKey].id = set.id
-                        superExercises[date][exerciseKey].sets = []
-                        superExercises[date][exerciseKey].date = set.date
-                        superExercises[date][exerciseKey].exercise = set.exercise
-                        superExercises[date][exerciseKey].part = 'x' // get part off another list
-                        superExercises[date][exerciseKey].position = set.position
-                        superExercises[date][exerciseKey].stance = set.stance
-                        superExercises[date][exerciseKey].style = set.style
-                        superExercises[date][exerciseKey].form = set.form
-                        superExercises[date][exerciseKey].equipment = set.equipment
-                        // calculate days since last exercise to x amount of days
-                        superExercises[date][exerciseKey].daysSinceLastExercise = differenceInDays 
+                        superExercises[date][exerciseKey] = {
+                            id: set.id,
+                            sets: [],
+                            date: set.date,
+                            exercise: set.exercise,
+                            part: 'x',
+                            position: set.position,
+                            stance: set.stance,
+                            style: set.style,
+                            form: set.form,
+                            equipment: set.equipment,
+                            daysSinceLastExercise: differenceInDays,
+                        }
                     }
                     superExercises[date][exerciseKey].sets.unshift(set)
                 }
@@ -86,8 +89,8 @@ export default function Gym(props) {
         }
     }
 
-    function findLastExerciseEntry(exerciseName, exerciseDate) {
-        let lastEntry = null
+    function findLastExerciseEntry(exerciseName: string, exerciseDate: string): JournalEntry | null {
+        let lastEntry: JournalEntry | null = null
         Object.values(journal).forEach((day) => {
             Object.values(day).forEach((dayExercise) => {
                 if (dayExercise.exercise == exerciseName && UtilityLibrary.toISODateString(dayExercise.date) !== exerciseDate) {
@@ -100,9 +103,9 @@ export default function Gym(props) {
         return lastEntry
     }
 
-    function returnRoutines() {
-        let routines = []
-        gymExercises.forEach((entry: any) => {
+    function returnRoutines(): string[] {
+        const routines: string[] = []
+        gymExercises.forEach((entry) => {
             if (!routines.includes(entry.type)) {
             routines.push(entry.type)
             }
@@ -110,20 +113,20 @@ export default function Gym(props) {
         return routines
     }
 
-    function openTrackModal(type) {
+    function openTrackModal(type: string) {
         setIsModalOpen(true)
         setSelectedType(type)
-        let trackList = []
-        gymExercises.forEach((entry: any) => {
+        const filtered: Exercise[] = []
+        gymExercises.forEach((entry) => {
             if (entry.type === type) {
-            trackList.push(entry)
+            filtered.push(entry)
             }
         })
-        setTrackList(trackList)
+        setTrackList(filtered)
     }
 
     function clearSelectedExercise() {
-        setSelectedExercise('')
+        setSelectedExercise(null)
         setSelectedPosition('')
         setSelectedEquipment('')
         setSelectedStyle('')
@@ -137,8 +140,8 @@ export default function Gym(props) {
         setIsModalOpen(false)
     }
 
-    function lastExerciseEntry(exercise: any) {
-        let lastEntry = null
+    function lastExerciseEntry(exercise: Exercise): JournalEntry | null {
+        let lastEntry: JournalEntry | null = null
         Object.values(journal).forEach((exercises) => {
             Object.values(exercises).forEach((entry) => {
                 if (entry.exercise == exercise.name) {
@@ -152,18 +155,19 @@ export default function Gym(props) {
     }
 
     async function logSet() {
+        if (!selectedExercise) return
         await GymApiLibrary.postJournal(selectedExercise.name, reps, weight, 'lbs', selectedStyle, selectedStance, selectedEquipment, selectedPosition)
         await getJournal()
         setReps('')
     }
 
-    function daySinceLastExercise(workout) {
+    function daySinceLastExercise(workout: Exercise): string {
         let days = '(...)'
-        let lowestExercise = null
+        let lowestExercise: JournalEntry | null = null
         Object.values(journal).forEach((exercises) => {
             Object.values(exercises).forEach((exercise) => {
                 if (exercise.exercise == workout.name) {
-                    if (lowestExercise === null || exercise.daysSinceLastExercise < lowestExercise.daysSinceLastExercise) {
+                    if (lowestExercise === null || (exercise.daysSinceLastExercise ?? Infinity) < (lowestExercise.daysSinceLastExercise ?? Infinity)) {
                       lowestExercise = exercise
                       days = `(${exercise?.daysSinceLastExercise})`
                     }
@@ -173,19 +177,7 @@ export default function Gym(props) {
         return days
     }
 
-    function calculateAverageTotalVolume(currentJournal) {
-        let totalVolume = 0
-        let totalExercises = 0
-        Object.values(currentJournal).forEach((day) => {
-            Object.values(day).forEach((exercise) => {
-                totalVolume += UtilityLibrary.calculateTotalVolume(exercise.sets)
-                totalExercises++
-            })
-        })
-        return (totalVolume / totalExercises).toFixed(1)
-    }
-
-    function calculateAverageTotalDailyVolume(currentJournal) {
+    function calculateAverageTotalDailyVolume(currentJournal: JournalMap): string {
         let totalAverageVolume = 0
         Object.keys(currentJournal).forEach((date) => {
             let dayVolume = 0
@@ -195,34 +187,6 @@ export default function Gym(props) {
             totalAverageVolume += dayVolume
         })
         return (totalAverageVolume / Object.keys(currentJournal).length).toFixed(1)
-    }
-
-    function calculateMedianTotalDailyVolume(currentJournal) {
-        let totalVolume = []
-        Object.keys(currentJournal).forEach((date) => {
-            let dayVolume = 0
-            Object.keys(currentJournal[date]).forEach((day) => {
-                dayVolume += UtilityLibrary.calculateTotalVolume(currentJournal[date][day].sets)
-            })
-            totalVolume.push(dayVolume)
-        })
-        totalVolume.sort((a, b) => a - b)
-        if (totalVolume.length % 2 === 0) {
-            return totalVolume[totalVolume.length / 2].toFixed(1)
-        } else {
-            return totalVolume[(totalVolume.length - 1) / 2].toFixed(1) // fix to properly calculate median
-        }
-    }
-
-    function calculateMedianTotalVolume(currentJournal) {
-        let totalVolume = []
-        Object.values(currentJournal).forEach((day) => {
-            Object.values(day).forEach((exercise) => {
-                totalVolume.push(UtilityLibrary.calculateTotalVolume(exercise.sets))
-            })
-        })
-        totalVolume.sort((a, b) => a - b)
-        return totalVolume[totalVolume.length / 2]
     }
 
     useEffect(() => {
@@ -244,7 +208,7 @@ export default function Gym(props) {
 
         setSubtitle(UtilityLibrary.buildExerciseSubtitle(selectedExercise))
 
-        const newQuery = { ...router.query }
+        const newQuery: Record<string, string> = {}
         // set query parameters
         if (selectedExercise) {
             newQuery.exercise = selectedExercise.name
@@ -282,24 +246,24 @@ export default function Gym(props) {
 
     useEffect(() => {
         if (router.query.exercise) {
-            const selectedExercise = gymExercises.find((exercise) => exercise.name === router.query.exercise)
-            if (selectedExercise) {
-                setIsModalOpen(selectedExercise.type)
-                setSelectedExercise(selectedExercise)
+            const foundExercise = gymExercises.find((exercise) => exercise.name === router.query.exercise)
+            if (foundExercise) {
+                setIsModalOpen(foundExercise.type)
+                setSelectedExercise(foundExercise)
                 if (router.query.stance) {
-                    setSelectedStance(router.query.stance)
+                    setSelectedStance(router.query.stance as string)
                 }
                 if (router.query.style) {
-                    setSelectedStyle(router.query.style)
+                    setSelectedStyle(router.query.style as string)
                 }
                 if (router.query.position) {
-                    setSelectedPosition(router.query.position)
+                    setSelectedPosition(router.query.position as string)
                 }
                 if (router.query.equipment) {
-                    setSelectedEquipment(router.query.equipment)
+                    setSelectedEquipment(router.query.equipment as string)
                 }
                 if (router.query.form) {
-                    setSelectedForm(router.query.form)
+                    setSelectedForm(router.query.form as string)
                 }
             }
         }
@@ -371,7 +335,7 @@ export default function Gym(props) {
                     </footer>
                 </>
             )}
-            { exerciseStep === 'forms' && (
+            { exerciseStep === 'forms' && selectedExercise && (
                 <>
                     <header>
                         <h2>{UtilityLibrary.capitalize(selectedExercise.name)}: Form</h2>
@@ -405,19 +369,19 @@ export default function Gym(props) {
                     </footer>
                 </>
             )}
-            { exerciseStep === 'styles' && (
+            { exerciseStep === 'styles' && selectedExercise && (
                 <>
                     <header>
                         <h2>{UtilityLibrary.capitalize(selectedExercise.name)}: Style</h2>
                     </header>
                     <div>
-                    { selectedExercise?.style?.map((style, index) => (
+                    { selectedExercise?.style?.map((styleOption, index) => (
                         <ButtonComponent 
                             key={index}
                             className="new neutral"
-                            label={style}
+                            label={styleOption}
                             type="button" 
-                            onClick={() => setSelectedStyle(style)}
+                            onClick={() => setSelectedStyle(styleOption)}
                         ></ButtonComponent>
                     ))}
                     </div>
@@ -439,7 +403,7 @@ export default function Gym(props) {
                     </footer>
                 </>
             )}
-            { exerciseStep === 'stances' && (
+            { exerciseStep === 'stances' && selectedExercise && (
                 <>
                     <header>
                         <h2>{UtilityLibrary.capitalize(selectedExercise.name)}: Stance</h2>
@@ -473,7 +437,7 @@ export default function Gym(props) {
                     </footer>
                 </>
             )}
-            { exerciseStep === 'positions' && (
+            { exerciseStep === 'positions' && selectedExercise && (
                 <>
                     <header>
                         <h2>{UtilityLibrary.capitalize(selectedExercise.name)}: Position</h2>
@@ -507,7 +471,7 @@ export default function Gym(props) {
                     </footer>
                 </>
             )}
-            { exerciseStep === 'equipment' && (
+            { exerciseStep === 'equipment' && selectedExercise && (
                 <>
                     <header>
                         <h2>{UtilityLibrary.capitalize(selectedExercise.name)}: Equipment</h2>
@@ -541,7 +505,7 @@ export default function Gym(props) {
                     </footer>
                 </>
             )}
-            { exerciseStep === 'log' && (
+            { exerciseStep === 'log' && selectedExercise && (
                 <>
                     <form className={style.logForm}>
                         <header>

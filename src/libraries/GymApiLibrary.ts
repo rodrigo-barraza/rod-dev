@@ -9,7 +9,7 @@ const GymApiLibrary = {
     },
 
     async postJournal(exercise: string, reps: string, weight: string, unit: string, style: string, stance: string, equipment: string, position: string) {
-        const body: Record<string, any> = {};
+        const body: Record<string, string> = {};
         if (exercise) body.exercise = exercise;
         if (reps) body.reps = reps;
         if (weight) body.weight = weight;

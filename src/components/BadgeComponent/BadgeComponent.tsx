@@ -1,21 +1,20 @@
 import React from 'react'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import style from './BadgeComponent.module.scss'
+import type { BadgeComponentProps } from '@/types/types'
 
-export default function ButtonComponent(props: any) {
-    const {type, value} = props
-
-    let label;
-    let color;
+export default function BadgeComponent({ type, value }: BadgeComponentProps) {
+    let label: string | undefined;
+    let color: string | undefined;
 
     if (type === 'sampler') {
         label = UtilityLibrary.findSamplerLabel(value)
     }
     if (type === 'style') {
         label = UtilityLibrary.findStyleLabel(value)
-        const style = UtilityLibrary.findStyle(value)
-        if (style) {
-            color = style.color
+        const foundStyle = UtilityLibrary.findStyle(value)
+        if (foundStyle) {
+            color = foundStyle.color
         }
     }
 

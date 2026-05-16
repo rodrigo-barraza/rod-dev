@@ -1,13 +1,22 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, type ReactNode } from 'react'
 
-export const AlertContext = createContext({
+interface AlertContextValue {
+    message: string;
+    setMessage: (message: string) => void;
+}
+
+export const AlertContext = createContext<AlertContextValue>({
     message: '',
     setMessage: () => {},
 })
 
 export const useAlertContext = () => useContext(AlertContext);
 
-export const AlertProvider = ({ children }) => {
+interface AlertProviderProps {
+    children: ReactNode;
+}
+
+export const AlertProvider = ({ children }: AlertProviderProps) => {
     const [message, setMessage] = useState('')
 
     return (

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { GetServerSideProps } from 'next'
+import type { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import style from './index.module.scss'
 import RenderApiLibrary from '@/libraries/RenderApiLibrary'
@@ -13,8 +13,14 @@ import UtilityLibrary from '@/libraries/UtilityLibrary'
 import GuestApiLibrary from '@/libraries/GuestApiLibrary'
 import useFilteredPagination from '@/hooks/useFilteredPagination'
 import useGuest from '@/hooks/useGuest'
+import type { Meta, Render, Guest } from '@/types/types'
 
-export const getServerSideProps: GetServerSideProps = async (context: any) => {
+interface LikesPageProps {
+  meta: Meta;
+  guest: Guest;
+}
+
+export const getServerSideProps: GetServerSideProps<LikesPageProps> = async (context: GetServerSidePropsContext) => {
   const { req, resolvedUrl } = context
 
   const meta = UtilityLibrary.buildPageMeta(resolvedUrl, {
@@ -26,16 +32,15 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 
   const ip = UtilityLibrary.getClientIp(req);
   const getGuest = await GuestApiLibrary.getGuest(ip)
-  const guest = getGuest.data || {};
+  const guest: Guest = getGuest.data || {};
 
   return { props: { meta, guest } };
 }
 
-export default function Renders(props) {
-  const { meta, guest } = props
+export default function Likes({ meta, guest }: LikesPageProps) {
   const router = useRouter()
-  const [likedRenders, setLikedRenders] = useState([])
-  const [currentRenders, setCurrentRenders] = useState([])
+  const [likedRenders, setLikedRenders] = useState<Render[]>([])
+  const [currentRenders, setCurrentRenders] = useState<Render[]>([])
   const { guestData, refreshGuest } = useGuest(guest);
 
   const {
@@ -50,8 +55,8 @@ export default function Renders(props) {
   } = useFilteredPagination(likedRenders);
 
   async function getRenders() {
-    const getRenders = await RenderApiLibrary.getRenders('12', 'user')
-    setCurrentRenders(getRenders.data.images)
+    const result = await RenderApiLibrary.getRenders('12', 'user')
+    setCurrentRenders(result.data.images)
   }
 
   useEffect(() => {
@@ -59,9 +64,9 @@ export default function Renders(props) {
   }, [])
 
   async function getLikedRenders() {
-    const getLikedRenders = await RenderApiLibrary.getLikedRenders()
-    setLikedRenders(getLikedRenders.data.images)
-    if (!getLikedRenders.data.images.length) {
+    const result = await RenderApiLibrary.getLikedRenders()
+    setLikedRenders(result.data.images)
+    if (!result.data.images.length) {
       UtilityLibrary.navigateToGeneration(router)
     }
   }
@@ -87,11 +92,11 @@ export default function Renders(props) {
           <FilterComponent setSearch={setSearch} setFilter={setFilter} setSort={setSort} setGalleryMode={setGalleryMode} search={search} filter={filter} sort={sort}/>
           <PaginationComponent 
           postsPerPage={postsPerPage} 
-          totalPosts={filteredCurrentRenders?.length} 
+          totalPosts={filteredCurrentRenders?.length ?? 0} 
           paginate={paginate} 
           currentPage={currentPage}/>
-          <GalleryComponent renders={filteredCurrentRendersList} getRenders={getLikedRenders} getGuest={refreshGuest} mode={galleryMode} />
-          <PaginationComponent postsPerPage={postsPerPage} totalPosts={filteredCurrentRenders?.length} paginate={paginate} currentPage={currentPage}/>
+          <GalleryComponent renders={filteredCurrentRendersList ?? []} getRenders={getLikedRenders} getGuest={refreshGuest} mode={galleryMode as 'grid' | 'list'} />
+          <PaginationComponent postsPerPage={postsPerPage} totalPosts={filteredCurrentRenders?.length ?? 0} paginate={paginate} currentPage={currentPage}/>
         </div>
     </main>
   )

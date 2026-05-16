@@ -1,9 +1,12 @@
 import SamplerCollection from '@/collections/SamplerCollection';
 import StyleCollection from '@/collections/StyleCollection';
+import type { GymSet, JournalMap } from '@/types/types';
+import type { NextRouter } from 'next/router';
+import type { IncomingMessage } from 'http';
 
 // Use native Temporal if available, otherwise polyfill (Safari)
 import { Temporal as TemporalPolyfill } from '@js-temporal/polyfill';
-const Temporal: typeof TemporalPolyfill = (globalThis as any).Temporal ?? TemporalPolyfill;
+const Temporal: typeof TemporalPolyfill = (globalThis as Record<string, unknown>).Temporal as typeof TemporalPolyfill ?? TemporalPolyfill;
 
 const ASSETS_PUBLIC_URL = process.env.NEXT_PUBLIC_ASSETS_PUBLIC_URL || 'https://assets.rod.dev';
 const ASSETS_BUCKET = process.env.NEXT_PUBLIC_ROD_DEV_ASSETS_MINIO_BUCKET_NAME || 'rod-dev-assets';
@@ -107,70 +110,71 @@ const UtilityLibrary = {
         return Number(weight) * Number(volume);
     },
 
-    calculateTotalVolume(sets: object[]) {
+    calculateTotalVolume(sets: GymSet[]) {
         if (sets && sets.length) {
             let totalVolume = 0;
-            sets.forEach((set: any) => {
+            sets.forEach((set) => {
                 totalVolume += this.calculateSetVolume(set.weight, set.reps);
             });
             return totalVolume;
         }
+        return 0;
     },
 
-    calculateTotalDayVolume(journal: any, date: string) {
+    calculateTotalDayVolume(journal: JournalMap, date: string) {
         let totalVolume = 0;
         if (journal[date]) {
-            Object.values(journal[date]).forEach((exercise: any) => {
+            Object.values(journal[date]).forEach((exercise) => {
                 totalVolume += this.calculateTotalVolume(exercise.sets);
             });
         }
         return totalVolume;
     },
 
-    calculateAverageWeight(sets: object[]) {
+    calculateAverageWeight(sets: GymSet[]) {
         if (sets && sets.length) {
             let totalWeight = 0;
-            sets.forEach((set: any) => {
+            sets.forEach((set) => {
                 totalWeight += Number(set.weight);
             });
             return (totalWeight / sets.length).toFixed(1);
         }
     },
 
-    calculateAverageReps(sets: object[]) {
+    calculateAverageReps(sets: GymSet[]) {
         if (sets && sets.length) {
             let totalReps = 0;
-            sets.forEach((set: any) => {
+            sets.forEach((set) => {
                 totalReps += Number(set.reps);
             });
             return (totalReps / sets.length).toFixed(1);
         }
     },
 
-    calculateTotalReps(sets: object[]) {
+    calculateTotalReps(sets: GymSet[]) {
         if (sets && sets.length) {
             let totalReps = 0;
-            sets.forEach((set: any) => {
+            sets.forEach((set) => {
                 totalReps += Number(set.reps);
             });
             return totalReps;
         }
     },
 
-    calculateSetVolumeRatio(set: any, sets: any[]) {
+    calculateSetVolumeRatio(set: GymSet, sets: GymSet[]) {
         const totalVolume = this.calculateTotalVolume(sets);
         const setVolume = this.calculateSetVolume(set.weight, set.reps);
         return ((setVolume / totalVolume) * 100).toFixed(0);
     },
 
-    buildExerciseSubtitle(entry: any): string {
+    buildExerciseSubtitle(entry: { form?: string | string[]; style?: string | string[]; stance?: string | string[]; position?: string | string[]; equipment?: string | string[] } | null): string {
         if (!entry) return '';
         const parts: string[] = [];
-        if (entry.form) parts.push(entry.form);
-        if (entry.style) parts.push(entry.style);
-        if (entry.stance) parts.push(entry.stance);
-        if (entry.position) parts.push(entry.position);
-        if (entry.equipment) parts.push(entry.equipment);
+        if (entry.form) parts.push(Array.isArray(entry.form) ? entry.form[0] : entry.form);
+        if (entry.style) parts.push(Array.isArray(entry.style) ? entry.style[0] : entry.style);
+        if (entry.stance) parts.push(Array.isArray(entry.stance) ? entry.stance[0] : entry.stance);
+        if (entry.position) parts.push(Array.isArray(entry.position) ? entry.position[0] : entry.position);
+        if (entry.equipment) parts.push(Array.isArray(entry.equipment) ? entry.equipment[0] : entry.equipment);
         return parts.join(', ');
     },
 
@@ -198,9 +202,8 @@ const UtilityLibrary = {
         if (style) {
             const foundStyle = StyleCollection.find((styleOption) => styleOption.value === style);
             return foundStyle;
-        } else {
-            return '';
         }
+        return undefined;
     },
 
     // ─── Media Utilities ────────────────────────────────────────
@@ -249,8 +252,8 @@ const UtilityLibrary = {
         return `${GENERATIONS_BASE_URL}/${id}.${extension}`;
     },
 
-    imageFullScreen(event: Event & { target: Element }, collectionPath: string, workImagePath: string) {
-        event.target.requestFullscreen();
+    imageFullScreen(event: React.MouseEvent<HTMLElement>, collectionPath: string, workImagePath: string | undefined) {
+        (event.target as HTMLElement).requestFullscreen();
     },
 
     // ─── String Utilities ───────────────────────────────────────
@@ -304,7 +307,7 @@ const UtilityLibrary = {
 
     // ─── Navigation Utilities ───────────────────────────────────
 
-    navigateToGeneration(router: any, id?: string) {
+    navigateToGeneration(router: NextRouter, id?: string) {
         if (id) {
             router.push({
                 pathname: '/generate',
@@ -338,7 +341,7 @@ const UtilityLibrary = {
     /**
      * Convenience wrapper for simple pages that only need meta props from getServerSideProps.
      */
-    buildServerSideMetaProps(context: any, overrides: {
+    buildServerSideMetaProps(context: { resolvedUrl: string; req?: IncomingMessage }, overrides: {
         title: string;
         description: string;
         keywords: string;
@@ -352,9 +355,10 @@ const UtilityLibrary = {
         };
     },
 
-    getClientIp(req: any) {
+    getClientIp(req: IncomingMessage) {
         const forwarded = req.headers['x-forwarded-for'];
-        return forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+        const forwardedStr = Array.isArray(forwarded) ? forwarded[0] : forwarded;
+        return forwardedStr ? forwardedStr.split(/, /)[0] : (req.socket?.remoteAddress ?? '');
     },
 };
 

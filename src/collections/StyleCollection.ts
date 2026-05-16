@@ -1,4 +1,6 @@
-const StyleCollection = [
+import type { SelectOption } from '@/types/types';
+
+const StyleCollection: SelectOption[] = [
     { value: '', label: 'None', color: 'red' },
     { value: 'photograph', label: 'Photograph', color: '#30bb65' },
     { value: 'vector', label: 'Vector', color: '#5730bb' },

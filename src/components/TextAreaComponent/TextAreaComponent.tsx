@@ -1,12 +1,12 @@
 import React from 'react'
 import style from './TextAreaComponent.module.scss'
+import type { TextAreaComponentProps } from '@/types/types'
 
-export default function TextAreaComponent(props: any) {
-    const {label, value, onChange, onKeyDown, disabled}: {label: string, value: string, onChange: any, onKeyDown: any, disabled: boolean} = props
+export default function TextAreaComponent({ label, value, onChange, onKeyDown, disabled }: TextAreaComponentProps) {
     return (
     <div className={style.TextAreaComponent}>
         <label>{label}</label>
-        <textarea value={value} onChange={event => onChange(event.target.value)} onKeyDown={event => onKeyDown(event)} disabled={disabled}></textarea>
+        <textarea value={value} onChange={event => onChange(event.target.value)} onKeyDown={event => onKeyDown?.(event)} disabled={disabled}></textarea>
     </div>
     )
 }

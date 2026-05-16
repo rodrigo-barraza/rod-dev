@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { debounce } from "@rodrigo-barraza/utilities-library/rate";
+import type { Render } from '@/types/types';
 
 interface UseFilteredPaginationOptions {
     postsPerPage?: number;
 }
 
-export default function useFilteredPagination(items: any[], options: UseFilteredPaginationOptions = {}) {
+export default function useFilteredPagination(items: Render[], options: UseFilteredPaginationOptions = {}) {
     const { postsPerPage = 12 } = options;
 
     const [search, setSearch] = useState('');

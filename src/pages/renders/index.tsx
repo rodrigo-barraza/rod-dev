@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { GetServerSideProps } from 'next'
+import type { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import style from './index.module.scss'
 import RenderApiLibrary from '@/libraries/RenderApiLibrary'
 import GenerateHeaderComponent from '@/components/GenerateHeaderComponent/GenerateHeaderComponent'
@@ -12,8 +12,14 @@ import UtilityLibrary from '@/libraries/UtilityLibrary'
 import GuestApiLibrary from '@/libraries/GuestApiLibrary'
 import useFilteredPagination from '@/hooks/useFilteredPagination'
 import useGuest from '@/hooks/useGuest'
+import type { Meta, Render, Guest } from '@/types/types'
 
-export const getServerSideProps: GetServerSideProps = async (context: any) => {
+interface RendersPageProps {
+  meta: Meta;
+  guest: Guest;
+}
+
+export const getServerSideProps: GetServerSideProps<RendersPageProps> = async (context: GetServerSidePropsContext) => {
   const { req, resolvedUrl } = context
 
   const meta = UtilityLibrary.buildPageMeta(resolvedUrl, {
@@ -25,14 +31,13 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 
   const ip = UtilityLibrary.getClientIp(req);
   const getGuest = await GuestApiLibrary.getGuest(ip)
-  const guest = getGuest.data || {};
+  const guest: Guest = getGuest.data || {};
 
   return { props: { meta, guest } };
 }
 
-export default function Renders(props) {
-  const { meta, guest } = props
-  const [currentRenders, setCurrentRenders] = useState([])
+export default function Renders({ meta, guest }: RendersPageProps) {
+  const [currentRenders, setCurrentRenders] = useState<Render[]>([])
   const { guestData, refreshGuest } = useGuest(guest);
 
   const {
@@ -47,8 +52,8 @@ export default function Renders(props) {
   } = useFilteredPagination(currentRenders);
 
   async function getRenders() {
-    const getRenders = await RenderApiLibrary.getRenders('12', 'user')
-    setCurrentRenders(getRenders.data.images)
+    const result = await RenderApiLibrary.getRenders('12', 'user')
+    setCurrentRenders(result.data.images)
   }
 
   useEffect(() => {
@@ -69,9 +74,9 @@ export default function Renders(props) {
               </div>
           </div>
           <FilterComponent setSearch={setSearch} setFilter={setFilter} setSort={setSort} setGalleryMode={setGalleryMode} search={search} filter={filter} sort={sort}/>
-          <PaginationComponent postsPerPage={postsPerPage} totalPosts={filteredCurrentRenders?.length} paginate={paginate} currentPage={currentPage}/>
-          <GalleryComponent renders={filteredCurrentRendersList} getRenders={getRenders} getGuest={refreshGuest} mode={galleryMode} />
-          <PaginationComponent postsPerPage={postsPerPage} totalPosts={filteredCurrentRenders?.length} paginate={paginate} currentPage={currentPage}/>
+          <PaginationComponent postsPerPage={postsPerPage} totalPosts={filteredCurrentRenders?.length ?? 0} paginate={paginate} currentPage={currentPage}/>
+          <GalleryComponent renders={filteredCurrentRendersList ?? []} getRenders={getRenders} getGuest={refreshGuest} mode={galleryMode as 'grid' | 'list'} />
+          <PaginationComponent postsPerPage={postsPerPage} totalPosts={filteredCurrentRenders?.length ?? 0} paginate={paginate} currentPage={currentPage}/>
         </div>
     </main>
   )

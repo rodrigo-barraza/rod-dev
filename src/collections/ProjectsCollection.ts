@@ -1,4 +1,6 @@
-const ProjectsCollection = [
+import type { Project } from '@/types/types';
+
+const ProjectsCollection: Project[] = [
     {
         title: "Text-to-Image Generator",
         year: "May 2023",

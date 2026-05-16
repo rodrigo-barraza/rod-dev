@@ -3,17 +3,16 @@ import InputComponent from '@/components/InputComponent/InputComponent'
 import SelectComponent from '@/components/SelectComponent/SelectComponent'
 import ButtonComponent from '@/components/ButtonComponent/ButtonComponent'
 import style from './FilterComponent.module.scss'
+import type { FilterComponentProps, SelectOption } from '@/types/types'
 
-export default function FilterComponent(props) {
-    const { setSearch, setFilter, setSort, setGalleryMode, search, filter, sort } = props
-
-    const filterOptions = [
+export default function FilterComponent({ setSearch, setFilter, setSort, setGalleryMode, search, filter, sort }: FilterComponentProps) {
+    const filterOptions: SelectOption[] = [
         { value: 'all', label: 'All' },
         { value: 'favorites', label: 'Favorites' },
         { value: 'unfavorites', label: 'Unfavorites' },
     ]
 
-    const sortOptions = [
+    const sortOptions: SelectOption[] = [
         { value: 'newest', label: 'Newest' },
         { value: 'oldest', label: 'Oldest' },
     ]
@@ -29,14 +28,12 @@ export default function FilterComponent(props) {
             ></InputComponent>
             <SelectComponent 
                 label="Filter"
-                type="text"
                 value={filter} 
                 onChange={setFilter}
                 options={filterOptions}
             ></SelectComponent>
             <SelectComponent 
                 label="Sort"
-                type="text"
                 value={sort} 
                 onChange={setSort}
                 options={sortOptions}

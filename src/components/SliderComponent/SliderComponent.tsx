@@ -1,15 +1,15 @@
 import React from 'react'
 import { useEffect, useRef } from 'react'
 import style from './SliderComponent.module.scss'
+import type { SliderComponentProps } from '@/types/types'
 
-export default function SliderComponent(props: any) {
-    const {label, value, onChange, disabled}: {label: string, value: number, onChange: any, disabled: boolean} = props
-
-    const inputReference: any = useRef({})
+export default function SliderComponent({ label, value, onChange, disabled }: SliderComponentProps) {
+    const inputReference = useRef<HTMLInputElement>(null)
     
     useEffect(() => {
-        const inputElement: any = inputReference.current
-        var val = (value - inputElement.min)/(inputElement.max - inputElement.min) * 100
+        const inputElement = inputReference.current
+        if (!inputElement) return
+        const val = (value - Number(inputElement.min)) / (Number(inputElement.max) - Number(inputElement.min)) * 100
         inputElement.style.background = 'linear-gradient(to right, #2c75fd 0%, #2c75fd ' + val + '%, #d3d3d3 ' + val + '%, #d3d3d3 100%)'
     }, [value])
 
@@ -22,7 +22,7 @@ export default function SliderComponent(props: any) {
             min="5" 
             max="9" 
             value={value} 
-            onChange={event => onChange(event.target.value)}
+            onChange={event => onChange(Number(event.target.value))}
             disabled={disabled}/>
         </div>
     )

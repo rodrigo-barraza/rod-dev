@@ -1,8 +1,8 @@
 import React from 'react'
 import style from './InputComponent.module.scss'
+import type { InputComponentProps } from '@/types/types'
 
-export default function InputComponent(props: any) {
-    const {label, type, value, onChange}: {label: string, type: string, value: string, onChange: any} = props
+export default function InputComponent({ label, type, value, onChange }: InputComponentProps) {
     return (
     <div className={style.InputComponent}>
         <label>{label}</label>

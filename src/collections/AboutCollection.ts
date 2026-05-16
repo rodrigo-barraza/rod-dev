@@ -1,4 +1,6 @@
-const AboutCollection = [
+import type { AboutSection } from '@/types/types';
+
+const AboutCollection: AboutSection[] = [
     {
       name: 'institutions',
       collections: [

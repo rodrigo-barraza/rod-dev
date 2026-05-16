@@ -10,22 +10,20 @@ const VISITOR_KEY = 'sessions_visitor_id';
 /** Get or create a persistent visitor ID (survives browser close via localStorage). */
 function getVisitorId(): string {
     if (typeof window === 'undefined') return '';
-    let id = localStorage.getItem(VISITOR_KEY);
-    if (!id) {
-        id = generateUUID();
-        localStorage.setItem(VISITOR_KEY, id);
-    }
+    const existing = localStorage.getItem(VISITOR_KEY);
+    if (existing) return existing;
+    const id = generateUUID();
+    localStorage.setItem(VISITOR_KEY, id);
     return id;
 }
 
 /** Get or create a session ID (dies when tab/window closes via sessionStorage). */
 function getSessionId(): string {
     if (typeof window === 'undefined') return '';
-    let id = sessionStorage.getItem(SESSION_KEY);
-    if (!id) {
-        id = generateUUID();
-        sessionStorage.setItem(SESSION_KEY, id);
-    }
+    const existing = sessionStorage.getItem(SESSION_KEY);
+    if (existing) return existing;
+    const id = generateUUID();
+    sessionStorage.setItem(SESSION_KEY, id);
     return id;
 }
 

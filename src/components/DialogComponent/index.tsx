@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { type ReactNode } from 'react'
 import style from './style.module.scss'
-import { useRef } from 'react'
 
-export default function DialogComponent(props: any) {
-    const {className, children, show}: {className: string, children: any, show: boolean} = props
-    const dialogReference: any = useRef({})
-    let combinedClassNames;
+interface DialogComponentProps {
+    className?: string;
+    children: ReactNode;
+    show: boolean | string;
+}
+
+export default function DialogComponent({ className, children, show }: DialogComponentProps) {
+    let combinedClassNames: string | undefined;
     if (className) {
         combinedClassNames = className.split(' ').map((name) => style[name]).join(' ');
     }
@@ -13,7 +16,7 @@ export default function DialogComponent(props: any) {
     return (
         <>
             {show && (
-                <div className={`${style.DialogComponent} ${combinedClassNames}`}>
+                <div className={`${style.DialogComponent} ${combinedClassNames || ''}`}>
                         <div className={style.modal}>
                             {children}
                         </div>

@@ -1,4 +1,10 @@
-const PagesCollection = [
+interface Page {
+    path: string;
+    name: string;
+    icon?: string;
+}
+
+const PagesCollection: Page[] = [
     // {
     //     path: '/gym',
     //     name: 'Gym',
@@ -25,4 +31,3 @@ const PagesCollection = [
 ];
 
 export default PagesCollection;
-  

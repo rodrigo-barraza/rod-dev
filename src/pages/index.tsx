@@ -7,8 +7,9 @@ import ArtCollectionsCollection from '@/collections/ArtCollectionsCollection'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
 import RenderApiLibrary from '@/libraries/RenderApiLibrary'
 import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
+import type { Meta, ArtCollection } from '@/types/types'
 
-export const getServerSideProps = async (context: any) =>
+export const getServerSideProps = async (context: { resolvedUrl: string }) =>
     UtilityLibrary.buildServerSideMetaProps(context, {
         title: 'Rodrigo Barraza: Photographer, Software Engineer, Artist',
         description: 'Visual portfolio of Rodrigo Barraza, a Vancouver-based photographer, software engineer and generative AI artist. Featuring photography, AI art, film, and animation collections.',
@@ -59,9 +60,12 @@ export const getServerSideProps = async (context: any) =>
 
     
 
-export default function Index(props) {
-    const { meta } = props
-    const [shuffledArtCollection, setShuffledArtCollection] = useState([])
+interface HomePageProps {
+    meta: Meta;
+}
+
+export default function Index({ meta }: HomePageProps) {
+    const [shuffledArtCollection, setShuffledArtCollection] = useState<ArtCollection[]>([])
 
     useEffect(() => {
         async function getRender() {
@@ -82,24 +86,6 @@ export default function Index(props) {
         <div className="gallery">
             {shuffledArtCollection.map((artCollection, artCollectionIndex) => (
                 <div className="image-container" key={artCollectionIndex}>
-                    { artCollection.prompt && (
-                        <Link 
-                        className="image" 
-                        href={`/generate?id=${artCollection.id}`}>
-                            <div className="the-image">
-                                <Image 
-                                    src={artCollection.image}
-                                    alt={artCollection.prompt}
-                                    fill={true}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                />
-                                <div className="inside-description">
-                                    <div className="name" itemProp="name">Generate</div>
-                                    <div className="year" itemProp="dateCreated">2023</div>
-                                </div>
-                            </div>
-                        </Link>
-                    )}
                     { artCollection.path && (
                         <Link 
                         className="image" 
@@ -110,13 +96,13 @@ export default function Index(props) {
                                 { !artCollection.works[0].videoPath && artCollection.thumbnail && (
                                     <Image 
                                     src={UtilityLibrary.renderAssetPath(artCollection.thumbnail, artCollection.path)}
-                                    alt={artCollection.description}
+                                    alt={artCollection.description || artCollection.title}
                                     fill={true}/>
                                 )}
                                 { !artCollection.works[0].videoPath && !artCollection.thumbnail && (
                                     <Image 
-                                    src={UtilityLibrary.renderAssetPath(artCollection.works[0].imagePath, artCollection.path)}
-                                    alt={artCollection.description}
+                                    src={UtilityLibrary.renderAssetPath(artCollection.works[0].imagePath ?? '', artCollection.path)}
+                                    alt={artCollection.description || artCollection.title}
                                     fill={true}/>
                                 )}
                                 { artCollection.works[0].videoPath && (

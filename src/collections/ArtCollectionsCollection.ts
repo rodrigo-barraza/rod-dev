@@ -1,4 +1,6 @@
-const ArtCollectionsCollection = [
+import type { ArtCollection } from '@/types/types';
+
+const ArtCollectionsCollection: ArtCollection[] = [
     {
         documentTitle: 'Tardigrades - AI Art by Rodrigo Barraza',
         documentKeywords: 'tardigrade, tardigrada, ai art, rodrigo barraza, artificial intelligence, machine learning, clip-guided diffusion, disco diffusion',

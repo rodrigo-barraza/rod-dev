@@ -1,4 +1,6 @@
-const ExerciseCollection = [
+import type { Exercise } from '@/types/types';
+
+const ExerciseCollection: Exercise[] = [
     {
         name: 'kickback',
         style: ['tricep'],

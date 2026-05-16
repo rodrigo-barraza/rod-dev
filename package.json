@@ -13,6 +13,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
     "deploy": "bash deploy.sh",
     "deploy:dry": "bash deploy.sh --dry-run",
     "setup-ssh": "bash setup-ssh.sh"

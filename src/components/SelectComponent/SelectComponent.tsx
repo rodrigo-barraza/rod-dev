@@ -1,8 +1,8 @@
 import React from 'react'
 import style from './SelectComponent.module.scss'
+import type { SelectComponentProps } from '@/types/types'
 
-export default function SelectComponent(props: any) {
-    const {label, value, options, onChange, disabled}: {label: string, value: string, options: Array<string>, onChange: any, disabled: boolean} = props
+export default function SelectComponent({ label, value, options, onChange, disabled }: SelectComponentProps) {
     return (
     <div className={style.SelectComponent}>
         <label>{label}</label>

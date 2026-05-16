@@ -6,8 +6,9 @@ import styles from './index.module.scss'
 import ButtonComponent from '@/components/ButtonComponent/ButtonComponent'
 import SeoHeadComponent from '@/components/SeoHeadComponent/SeoHeadComponent'
 import UtilityLibrary from '@/libraries/UtilityLibrary'
+import type { Meta } from '@/types/types'
 
-export const getServerSideProps = async (context: any) =>
+export const getServerSideProps = async (context: { resolvedUrl: string }) =>
     UtilityLibrary.buildServerSideMetaProps(context, {
         title: 'The Software Engineer, Photographer, Artist: Rodrigo Barraza',
         description: 'About Rodrigo Barraza, a Vancouver-based software engineer, photographer, generative AI artist and filmmaker. BFA in Photography from Emily Carr University. Over 20 years of programming experience.',
@@ -111,11 +112,12 @@ export const getServerSideProps = async (context: any) =>
         },
     });
 
+interface AboutPageProps {
+    meta: Meta;
+}
     
 
-export default function AboutView(props) {
-    const { meta } = props
-
+export default function AboutView({ meta }: AboutPageProps) {
     return (
         <main className={ styles.AboutView }>
             <SeoHeadComponent meta={meta} />

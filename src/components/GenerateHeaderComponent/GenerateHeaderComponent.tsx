@@ -1,11 +1,9 @@
-import { useRouter } from 'next/router'
+import React from 'react'
 import styles from './GenerateHeaderComponent.module.scss'
 import ButtonComponent from '@/components/ButtonComponent/ButtonComponent'
+import type { GenerateHeaderComponentProps } from '@/types/types'
 
-const GenerateHeaderComponent: React.FC = (props) => {
-    const { guest, renders } = props;
-    const router = useRouter()
-
+const GenerateHeaderComponent: React.FC<GenerateHeaderComponentProps> = ({ guest, renders }) => {
     return (
         <div className={styles.GenerateHeaderComponent}>
           <div className={styles.container}>

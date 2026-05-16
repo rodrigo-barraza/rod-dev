@@ -12,7 +12,7 @@ import { ThemeProvider } from "@rodrigo-barraza/components-library";
 import { useApplicationState } from "@/stores/ZustandStore";
 
 
-function App({ Component, pageProps }: AppProps): JSX.Element {
+function App({ Component, pageProps }: AppProps) {
     const { message } = useAlertContext();
     const [getRenderStatus, setRenderStatus] = useState(false);
     const { setIsRenderApiAvailable } = useApplicationState();
@@ -51,7 +51,7 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
         // Track navigation and link clicks
         document.addEventListener('click', (event: MouseEvent) => {
             event = event || window.event;
-            const target = event.target as any;
+            const target = event.target as HTMLAnchorElement;
             if (target && target.nodeName === 'A') {
                 if(target.href.includes('//development.rod.dev') ||
                 target.href.includes('//rod.dev') ||

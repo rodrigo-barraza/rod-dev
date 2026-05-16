@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import useFilteredPagination from '@/hooks/useFilteredPagination';
+import type { Render } from '@/types/types';
 
 const mockItems = [
   { prompt: 'A sunset over mountains', favorite: true },
@@ -8,7 +9,7 @@ const mockItems = [
   { prompt: 'Abstract colorful painting', favorite: true },
   { prompt: 'City skyline at night', favorite: false },
   { prompt: 'Ocean waves crashing', favorite: true },
-];
+] as unknown as Render[];
 
 describe('useFilteredPagination', () => {
   beforeEach(() => {
@@ -79,7 +80,7 @@ describe('useFilteredPagination', () => {
     const manyItems = Array.from({ length: 25 }, (_, i) => ({
       prompt: `Item ${i}`,
       favorite: false,
-    }));
+    })) as unknown as Render[];
 
     const { result } = renderHook(() =>
       useFilteredPagination(manyItems, { postsPerPage: 10 })
@@ -105,7 +106,7 @@ describe('useFilteredPagination', () => {
     const manyItems = Array.from({ length: 25 }, (_, i) => ({
       prompt: `Item ${i}`,
       favorite: i % 2 === 0,
-    }));
+    })) as unknown as Render[];
 
     const { result } = renderHook(() =>
       useFilteredPagination(manyItems, { postsPerPage: 10 })

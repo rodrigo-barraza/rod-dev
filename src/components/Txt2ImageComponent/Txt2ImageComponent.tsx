@@ -17,8 +17,9 @@ import LikeComponent from '@/components//LikeComponent/LikeComponent'
 import { useAlertContext } from '@/contexts/AlertContext'
 import styles from './Txt2ImageComponent.module.scss'
 import { useApplicationState } from "@/stores/ZustandStore";
+import type { Txt2ImageComponentProps, Render, SelectOption } from '@/types/types'
 
-export default function Txt2ImageComponent({render, setGuest}) {
+export default function Txt2ImageComponent({ render, setGuest }: Txt2ImageComponentProps) {
     const router = useRouter();
     const currentPage = usePathname()
     const [image, setImage] = useState('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==')
@@ -37,8 +38,8 @@ export default function Txt2ImageComponent({render, setGuest}) {
     const [isSharing, setIsSharing] = useState(false)
     const [like, setLike] = useState(render.like)
     const [likes, setLikes] = useState(render.likes)
-    const [theRender, setTheRender] = useState(render)
-    const formReference = useRef(null)
+    const [theRender, setTheRender] = useState<Render>(render)
+    const formReference = useRef<HTMLFormElement>(null)
     const [aspectRatio, setAspectRatio] = useState(AspectRatioCollection[0].value)
     const { isRenderApiAvailable } = useApplicationState();
 
@@ -57,22 +58,22 @@ export default function Txt2ImageComponent({render, setGuest}) {
             router.query.id = parsedResult.data.id
             router.push(router)
 
-            setTheRender(parsedResult.data)
+            setTheRender(parsedResult.data as unknown as Render)
 
-            setStyleLabelColor(currentStyle.color)
+            setStyleLabelColor(currentStyle?.color ?? 'black')
             setGeneratedImageId(parsedResult.data.id)
             setGeneratedImageTitle(`Generated Image #${parsedResult.data.count}`)
             setGeneratedImageDescription(newPrompt)
-            setDate(UtilityLibrary.toHumanDateAndTime(parsedResult.data.createdAt))
-            setGeneratedImageSampler(samplerLabel)
-            setGeneratedImageStyle(styleLabel)
+            setDate(UtilityLibrary.toHumanDateAndTime(parsedResult.data.createdAt) ?? '')
+            setGeneratedImageSampler(samplerLabel ?? '')
+            setGeneratedImageStyle(styleLabel ?? '')
 
-            const img = new Image()
+            const img = new window.Image()
             img.onload = function () {
-                setImage(parsedResult.data.image)
+                setImage(parsedResult.data.image ?? '')
                 setIsImageLoading(false)
             }
-            img.src = parsedResult.data.image
+            img.src = parsedResult.data.image ?? ''
 
         })
         .catch(error => console.error('error', error));
@@ -96,13 +97,13 @@ export default function Txt2ImageComponent({render, setGuest}) {
                 if (render.aspectRatio) setAspectRatio(render.aspectRatio)
                 else setAspectRatio(AspectRatioCollection[0].value)
 
-                setStyleLabelColor(currentStyle.color)
+                setStyleLabelColor(currentStyle?.color ?? 'black')
                 setGeneratedImageId(render.id)
                 setGeneratedImageTitle(`Generated Image #${render.count}`)
                 setGeneratedImageDescription(render.prompt)
-                setDate(UtilityLibrary.toHumanDateAndTime(render.createdAt))
-                setGeneratedImageSampler(samplerLabel)
-                setGeneratedImageStyle(styleLabel)
+                setDate(UtilityLibrary.toHumanDateAndTime(render.createdAt) ?? '')
+                setGeneratedImageSampler(samplerLabel ?? '')
+                setGeneratedImageStyle(styleLabel ?? '')
 
 
                 setImage(render.image)
@@ -112,13 +113,13 @@ export default function Txt2ImageComponent({render, setGuest}) {
         getRender()
     }, [render])
 
-    function onTextAreaComponentChange(event: any) {
+    function onTextAreaComponentChange(event: React.KeyboardEvent<HTMLTextAreaElement>) {
         if(event.keyCode == 13 && event.shiftKey == false) {
             submitForm(event);
           }
     }
 
-    function submitForm(event: any) {
+    function submitForm(event: React.FormEvent | React.KeyboardEvent) {
         event.preventDefault()
         renderImage()
     }
@@ -127,13 +128,13 @@ export default function Txt2ImageComponent({render, setGuest}) {
         UtilityLibrary.downloadImage(image, generatedImageTitle);
     }
 
-    async function getRender(id) {
-        const getRender = await RenderApiLibrary.getRender(id)
-        const render = getRender.data
-        if (render) {
-            setLike(render.like)
-            setLikes(render.likes)
-            setTheRender(render)
+    async function fetchRender(id: string) {
+        const result = await RenderApiLibrary.getRender(id)
+        const renderData = result.data
+        if (renderData) {
+            setLike(renderData.like)
+            setLikes(renderData.likes)
+            setTheRender(renderData)
         }
     }
 
@@ -220,8 +221,8 @@ export default function Txt2ImageComponent({render, setGuest}) {
                     ></ButtonComponent> */}
                 </div>
                 <div className="super-actions">
-                    <LikeComponent type="like" render={theRender} setFunction={getRender} setGuest={setGuest}></LikeComponent>
-                    <LikeComponent type="favorite" render={theRender} setFunction={getRender} setGuest={setGuest}></LikeComponent>
+                    <LikeComponent type="like" render={theRender} setFunction={fetchRender} setGuest={setGuest}></LikeComponent>
+                    <LikeComponent type="favorite" render={theRender} setFunction={fetchRender} setGuest={setGuest}></LikeComponent>
                 </div>
                 <div className="super-actions2">
                     <ButtonComponent 
