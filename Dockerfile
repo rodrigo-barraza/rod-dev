@@ -41,9 +41,10 @@ RUN adduser --system --uid 1001 nextjs
 # Copy public assets
 COPY --from=builder /app/public ./public
 
-# Copy standalone server and static assets
+# Copy standalone server, static assets, and boot script
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/boot.js ./boot.js
 
 USER nextjs
 
@@ -52,4 +53,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 -O /dev/null http://127.0.0.1:3000/ || exit 1
 
-CMD ["node", "server.js"]
+CMD ["node", "boot.js"]
