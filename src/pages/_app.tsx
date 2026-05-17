@@ -49,7 +49,7 @@ function App({ Component, pageProps }: AppProps) {
         getStatus();
 
         // Track navigation and link clicks
-        document.addEventListener('click', (event: MouseEvent) => {
+        const handleDocumentClick = (event: MouseEvent) => {
             event = event || window.event;
             const target = event.target as HTMLAnchorElement;
             if (target && target.nodeName === 'A') {
@@ -61,14 +61,19 @@ function App({ Component, pageProps }: AppProps) {
                     EventLibrary.postEventLinkClick(target.href);
                 }
             }
-        }, false);
+        };
+        
+        document.addEventListener('click', handleDocumentClick, false);
 
         // Session heartbeat — every 5 seconds
         const heartbeatInterval = setInterval(() => {
             EventLibrary.postSession(5000, screen.width, screen.height);
         }, 5000);
 
-        return () => clearInterval(heartbeatInterval);
+        return () => {
+            clearInterval(heartbeatInterval);
+            document.removeEventListener('click', handleDocumentClick, false);
+        };
     }, [])
 
     return (

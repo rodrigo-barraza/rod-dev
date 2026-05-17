@@ -28,7 +28,8 @@ const HeaderComponent: React.FC = () => {
             setPageOffset(window.pageYOffset)
         }
         window.addEventListener('scroll', onScroll);
-    })
+        return () => window.removeEventListener('scroll', onScroll);
+    }, [])
 
     useEffect(() => {
         const setStripeStyles = function() {
