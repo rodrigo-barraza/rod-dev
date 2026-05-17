@@ -6,6 +6,7 @@
 // ============================================================
 
 import { createVaultClient } from "@rodrigo-barraza/utilities-library/node";
+import type { NextConfig } from "next";
 
 // ── Bootstrap secrets at build/dev time ────────────────────────
 const vault = createVaultClient({
@@ -18,8 +19,7 @@ const secrets = await vault.fetch();
 // Inject into process.env so the app can read them
 Object.assign(process.env, secrets);
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   output: "standalone",
   turbopack: {},
   transpilePackages: ["@rodrigo-barraza/utilities-library", "@rodrigo-barraza/components-library"],
