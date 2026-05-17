@@ -10,9 +10,8 @@ FROM node:22-alpine AS base
 FROM base AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN apk add --no-cache git openssh-client
-RUN mkdir -p -m 0700 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-RUN --mount=type=ssh npm ci
+RUN apk add --no-cache git
+RUN npm ci
 
 # --- Build ---
 FROM base AS builder
