@@ -14,7 +14,7 @@ const vault = createVaultClient({
   fallbackEnvFile: "../vault-service/.env",
 });
 
-const secrets = await vault.fetch();
+const secrets = vault.fetchSync();
 
 // Inject into process.env so the app can read them
 Object.assign(process.env, secrets);
