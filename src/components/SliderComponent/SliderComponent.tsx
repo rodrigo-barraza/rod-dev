@@ -9,8 +9,8 @@ export default function SliderComponent({ label, value, onChange, disabled }: Sl
     useEffect(() => {
         const inputElement = inputReference.current
         if (!inputElement) return
-        const val = (value - Number(inputElement.min)) / (Number(inputElement.max) - Number(inputElement.min)) * 100
-        inputElement.style.background = 'linear-gradient(to right, #2c75fd 0%, #2c75fd ' + val + '%, #d3d3d3 ' + val + '%, #d3d3d3 100%)'
+        const value = (value - Number(inputElement.min)) / (Number(inputElement.max) - Number(inputElement.min)) * 100
+        inputElement.style.background = 'linear-gradient(to right, #2c75fd 0%, #2c75fd ' + value + '%, #d3d3d3 ' + value + '%, #d3d3d3 100%)'
     }, [value])
 
     return (

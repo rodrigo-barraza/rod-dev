@@ -37,8 +37,8 @@ const FetchWrapper = {
             } else {
                 error = response;
             }
-        } catch (err) {
-            error = err;
+        } catch (error) {
+            error = error;
         }
         return { data, error, response };
     },

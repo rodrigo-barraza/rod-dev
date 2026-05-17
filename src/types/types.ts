@@ -113,7 +113,7 @@ export interface Render {
     prompt: string;
     style: string;
     sampler: string;
-    cfg: number;
+    config: number;
     count?: number;
     createdAt: string;
     aspectRatio?: string;

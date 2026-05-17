@@ -26,7 +26,7 @@ export default function Txt2ImageComponent({ render, setGuest }: Txt2ImageCompon
     const [newPrompt, setNewPrompt] = useState('')
     const [sampler, setSampler] = useState(SamplerCollection[0].value)
     const [newStyle, setNewStyle] = useState('')
-    const [cfg, setCfg] = useState(7)
+    const [config, setCfg] = useState(7)
     const [date, setDate] = useState('')
     const [isImageLoading, setIsImageLoading] = useState(false)
     const [generatedImageTitle, setGeneratedImageTitle] = useState('Generated Image #')
@@ -49,7 +49,7 @@ export default function Txt2ImageComponent({ render, setGuest }: Txt2ImageCompon
 
     const renderImage = useCallback(() => {
         setIsImageLoading(true)
-        RenderApiLibrary.postRender(newPrompt, sampler, cfg, newStyle, '', aspectRatio)
+        RenderApiLibrary.postRender(newPrompt, sampler, config, newStyle, '', aspectRatio)
         .then(parsedResult => {
             const samplerLabel = UtilityLibrary.findSamplerLabel(parsedResult.data.sampler)
             const styleLabel = UtilityLibrary.findStyleLabel(parsedResult.data.style)
@@ -68,16 +68,16 @@ export default function Txt2ImageComponent({ render, setGuest }: Txt2ImageCompon
             setGeneratedImageSampler(samplerLabel ?? '')
             setGeneratedImageStyle(styleLabel ?? '')
 
-            const img = new window.Image()
-            img.onload = function () {
+            const image = new window.Image()
+            image.onload = function () {
                 setImage(parsedResult.data.image ?? '')
                 setIsImageLoading(false)
             }
-            img.src = parsedResult.data.image ?? ''
+            image.src = parsedResult.data.image ?? ''
 
         })
         .catch(error => console.error('error', error));
-    },[newStyle, newPrompt, sampler, cfg, aspectRatio])
+    },[newStyle, newPrompt, sampler, config, aspectRatio])
 
 
     useEffect(() => {
@@ -91,7 +91,7 @@ export default function Txt2ImageComponent({ render, setGuest }: Txt2ImageCompon
 
                 setSampler(render.sampler)
                 setNewStyle(render.style)
-                setCfg(render.cfg)
+                setCfg(render.config)
                 setNewPrompt(render.prompt)
                 
                 if (render.aspectRatio) setAspectRatio(render.aspectRatio)
@@ -178,7 +178,7 @@ export default function Txt2ImageComponent({ render, setGuest }: Txt2ImageCompon
                     <SliderComponent 
                     // disabled="true"
                     label="Strength"
-                    value={cfg} 
+                    value={config} 
                     onChange={setCfg}
                     ></SliderComponent>
                     <SelectComponent 
